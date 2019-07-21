@@ -1,10 +1,14 @@
 import React from "react";
+import Meta from './Meta';
+import Header from '../components/Header';
+
 
 class Page extends React.Component {
     render() {
         return (
             <div>
-                <p>_PAGE_ component</p>
+                <Meta />
+                <Header />
                 {this.props.children}
             </div>
         );

@@ -3,7 +3,6 @@ import Link from 'next/link';
 
 const Nav = props => (
     <div>
-        <h1>_Nav_ component</h1>
         <Link href='/'>
             <a>main</a>
         </Link>

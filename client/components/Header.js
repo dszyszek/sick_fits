@@ -1,7 +1,11 @@
+import Nav from './Nav';
+
+
 const Header = () => (
     <div>
         <div class='bar'>
             <a href=''>Sick Fits</a>
+            <Nav />
         </div>
 
         <div class='sub-bar'>
