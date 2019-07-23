@@ -1,7 +1,5 @@
 import App, {Container} from 'next/app';
 import Page from '../components/Page';
-import Header from '../components/Header';
-import Nav from '../components/Nav';
 
 
 class MyApp extends App {
@@ -10,11 +8,9 @@ class MyApp extends App {
 
         return (
             <Container>
-                <Nav />
-                <Header />
-                <Component />
-                <Page />
-
+                <Page>
+                    <Component />
+                </Page>
             </Container>
         );
 

@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const Sell = props => (
     <div>
-        <h1>_SELL_ page</h1>
+        <p>_SELL_ page</p>
     </div>
 );
 

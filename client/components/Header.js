@@ -3,12 +3,12 @@ import Nav from './Nav';
 
 const Header = () => (
     <div>
-        <div class='bar'>
+        <div className='bar'>
             <a href=''>Sick Fits</a>
             <Nav />
         </div>
 
-        <div class='sub-bar'>
+        <div className='sub-bar'>
             <p>Search</p>
         </div>
 
