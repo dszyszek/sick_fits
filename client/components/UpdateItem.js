@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Mutation} from 'react-apollo';
+import {Query, Mutation} from 'react-apollo';
 import gql from 'graphql-tag';
 import Router from 'next/router';
 
@@ -8,34 +8,41 @@ import formatMoney from '../lib/formatMoney';
 import Error from './ErrorMessage';
 
 
+const SINGLE_ITEM_QUERY = gql`
+    query SINGLE_ITEM_QUERY($id: ID!) {
+        item(where: {id: $id}) {
+            id
+            title
+            description
+            price
+        }
+    }
+`;
+
+
 const UPDATE_ITEM_MUTATION = gql`
     mutation UPDATE_ITEM_MUTATION(
-        $title: String!
-        $description: String!
-        $price: Int!
-        $image: String
-        $largeImage: String
+        $id: ID!
+        $title: String
+        $description: String
+        $price: Int
     ) {
-        createItem(
+        updateItem(
+            id: $id
             title: $title
             description: $description
             price: $price
-            image: $image
-            largeImage: $largeImage
         ) {
             id
+            title
+            description
+            price
         }
     }
 `;
 
 class UpdateItem extends Component {
-    state = {
-        title: '',
-        description: '',
-        image: '',
-        largeImage: '',
-        price: ''
-    };
+    state = {};
 
     updateValue = (e) => {
         const {name, type, value} = e.target;
@@ -45,109 +52,92 @@ class UpdateItem extends Component {
         });
     } 
 
-    uploadFile = async e => {
-        console.log('uploading file...');
-        const files = e.target.files;
-        const data = new FormData();
-        data.append('file', files[0]);
-        data.append('upload_preset', 'sickfits');
+    updateItem = async (e, updateItemMutation) => {
+        e.preventDefault();
+        console.log('Updating item...');
+        console.log(this.state);
 
-        const res = await fetch('https://api.cloudinary.com/v1_1/dszyszek/image/upload', {
-            method: 'POST',
-            body: data
-        });
-
-        const file = await res.json();
-
-        this.setState({
-            image: file.secure_url,
-            largeImage: file.eager[0].secure_url
+        const res = await updateItemMutation({
+            variables: {
+                id: this.props.id,
+                ...this.state
+            }
         });
     }
 
     render() {
         return (
-            <Mutation 
-                mutation={UPDATE_ITEM_MUTATION}
-                variables={this.state}
+            <Query query={SINGLE_ITEM_QUERY} variables={{
+                id: this.props.id
+            }}
             >
-                {(createItem, {loading, error}) => (
-
-                    <Form onSubmit={async e => {
-                        e.preventDefault();
-                        const res = await createItem();
-                        Router.push({
-                            pathname: '/item',
-                            query: {id: res.data.createItem.id}
-                        });
-                    }}>
-                        <Error error={error} />
-                        <fieldset disabled={loading} aria-busy={loading}>
-                            <label htmlFor='file'>
-                                Image
+                {({data, loading}) => {
+                    if (loading) return <p>Loading...</p>
+                    if (!data.item) return <p>No Item found for that ID {this.props.id}</p>
+                    
+                    return (
+                        <Mutation 
+                        mutation={UPDATE_ITEM_MUTATION}
+                        variables={this.state}
+                        >
+                        {(updateItem, {loading, error}) => (
                             
-                                <input 
-                                type='file' 
-                                id='file' 
-                                name='file' 
-                                placeholder='Upload an image' 
-                                required 
-                                onChange={this.uploadFile}
-                                />
-
-                                {this.state.image && <img src={this.state.image} alt='Upload preview' width='200px' />}
-                            </label>
-                        
+                            <Form onSubmit={e => this.updateItem(e, updateItem)}>
+                            <Error error={error} />
+                            <fieldset disabled={loading} aria-busy={loading}>
+                            
                             <label htmlFor='title'>
-                                Title
-                                
-                                <input 
-                                type='text' 
-                                id='title' 
-                                name='title' 
-                                placeholder='Title' 
-                                required 
-                                value={this.state.title} 
-                                onChange={this.updateValue}
-                                />
+                            Title
+                            <input 
+                            type='text' 
+                            id='title' 
+                            name='title' 
+                            placeholder='Title' 
+                            required 
+                            defaultValue={data.item.title} 
+                            onChange={this.updateValue}
+                            />
                             </label>
                             
                             <label htmlFor='price'>
-                                Price
-                                <input 
-                                type='number' 
-                                id='price' 
-                                name='price' 
-                                placeholder='Price' 
-                                required 
-                                value={this.state.price} 
-                                onChange={this.updateValue}
-                                />
-                                
+                            Price
+                            <input 
+                            type='number' 
+                            id='price' 
+                            name='price' 
+                            placeholder='Price' 
+                            required 
+                            defaultValue={data.item.price} 
+                            onChange={this.updateValue}
+                            />
+                            
                             </label>
                             
                             <label htmlFor='description'>
-                                Description   
-                                <textarea 
-                                id='description' 
-                                name='description' 
-                                placeholder='Type in some description' 
-                                required 
-                                        value={this.state.description} 
-                                        onChange={this.updateValue}
-                                />
-
+                            Description   
+                            <textarea 
+                            id='description' 
+                            name='description' 
+                            placeholder='Type in some description' 
+                            required 
+                            defaultValue={data.item.description} 
+                            onChange={this.updateValue}
+                            />
+                            
                             </label>
                             <button type='submit'>Submit</button>
-                        
-                        </fieldset>
-                    </Form>
-                )}
-            </Mutation>
+                            
+                            </fieldset>
+                            </Form>
+                            )}
+                            </Mutation>
+                            );
+                        }}
+                    </Query>
                             );
                         }
                     }
                     
-export default UpdateItem;
-export {UPDATE_ITEM_MUTATION};
+                    export default UpdateItem;
+                    export {UPDATE_ITEM_MUTATION};
                     
