@@ -8,8 +8,8 @@ import formatMoney from '../lib/formatMoney';
 import Error from './ErrorMessage';
 
 
-const CREATE_ITEM_MUTATION = gql`
-    mutation CREATE_ITEM_MUTATION(
+const UPDATE_ITEM_MUTATION = gql`
+    mutation UPDATE_ITEM_MUTATION(
         $title: String!
         $description: String!
         $price: Int!
@@ -28,7 +28,7 @@ const CREATE_ITEM_MUTATION = gql`
     }
 `;
 
-class CreateItem extends Component {
+class UpdateItem extends Component {
     state = {
         title: '',
         description: '',
@@ -68,7 +68,7 @@ class CreateItem extends Component {
     render() {
         return (
             <Mutation 
-                mutation={CREATE_ITEM_MUTATION}
+                mutation={UPDATE_ITEM_MUTATION}
                 variables={this.state}
             >
                 {(createItem, {loading, error}) => (
@@ -148,6 +148,6 @@ class CreateItem extends Component {
                         }
                     }
                     
-                    export default CreateItem;
-                    export {CREATE_ITEM_MUTATION};
+export default UpdateItem;
+export {UPDATE_ITEM_MUTATION};
                     
