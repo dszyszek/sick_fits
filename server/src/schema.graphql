@@ -7,5 +7,5 @@ type Mutation {
 
 type Query {
     items: [Item]!
-    items(where: ItemWhereInput!): Item
+    item(where: ItemWhereInput!): Item
 }
