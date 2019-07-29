@@ -35,16 +35,17 @@ class Items extends Component {
     render() {
         return (
             <Center>
-                <p>Items!</p>
-                <Query query={ALL_ITEMS_QUERY}>
+                <Pagination page={this.props.page} />
+                    <Query query={ALL_ITEMS_QUERY}>
                     {({data, error, loading}) => {
                         if (loading) return <p>Loading...</p>
                         if (error) return <p>Error... {error.message}</p>
                         return <ItemsList>
-                            {data.items.map(item => <Item key={item.id} item={item}>{item.title}</Item>)}
+                        {data.items.map(item => <Item key={item.id} item={item}>{item.title}</Item>)}
                         </ItemsList>
                     }}
-                </Query>
+                    </Query>
+                <Pagination page={this.props.page} />
 
             </Center>
         );
