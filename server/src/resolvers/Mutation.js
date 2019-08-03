@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const {randomBytes} = require('crypto');
+const {promisify} = require('util');
 
 const mutations = {
 
@@ -78,7 +80,24 @@ const mutations = {
     signout(parent, args, ctx, info) {
         ctx.response.clearCookie('token');
         return {message: 'Successfully logged out.'}
-    }
+    },
+
+    async requestReset(parent, {email}, ctx, info) {
+        const user = await ctx.db.query.user({where: {email}});
+
+        if (!user) {
+            throw new Error('No such user');
+        }
+        const randomBytesWithPromisify = promisify(randomBytes);
+        const resetToken = (await randomBytesWithPromisify(20)).toString('hex');
+        const resetTokenExpiry = Date.now() + 1000 * 3600; // 1h
+        const res = await ctx.db.mutation.updateUser({
+            where: {email},
+            data: {resetToken, resetTokenExpiry}
+        });
+        console.log(res);
+        return {message: 'Token has been reset'};
+    }  
 
 };
 
