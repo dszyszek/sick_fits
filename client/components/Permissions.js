@@ -3,6 +3,7 @@ import {Query} from 'react-apollo';
 import gql from 'graphql-tag';
 
 import Table from './styles/Table';
+import SickButton from './styles/SickButton';
 import Error from './ErrorMessage';
 
 
@@ -42,12 +43,12 @@ const Permissions = props => {
                                 <tr>
                                     <th>Name</th>
                                     <th>Email</th>
-                                    {possiblePermissions.map(permission => <th>{permission}</th>)}
+                                    {possiblePermissions.map((permission, i) => <th key={i}>{permission}</th>)}
                                     <th>-</th>
                                 </tr>
                             </thead>
                             <tbody>
-                               {data.users.map(user => user.name)}
+                               {data.users.map((user, i) => <User key={i} user={user} />)}
                             </tbody>
                         </Table>
                     </div>
@@ -60,9 +61,22 @@ const Permissions = props => {
 
 class User extends Component {
     render() {
+        const user = this.props.user;
         return (
             <tr>
-                <td></td> 
+                <td>{user.name}</td> 
+                <td>{user.email}</td> 
+                {possiblePermissions.map((permission, i) => (
+                    <td key={i}>
+                        <label htmlFor={`${user.id} - permission - ${permission}`}>
+                            <input type="checkbox" />
+                        </label>
+                    </td>
+                )
+                )}
+                <td>
+                    <SickButton>Update</SickButton>
+                </td>
             </tr>
         );
     }
