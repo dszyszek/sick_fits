@@ -3,6 +3,7 @@ import {Mutation} from 'react-apollo';
 import gql from 'graphql-tag';
 import Form from './styles/Form';
 import Error from './ErrorMessage';
+import {CURRENT_USER_QUERY} from './User';
 
 const RESET_MUTATION = gql`
     mutation RESET_MUTATION($resetToken: String!, $password: String!, $confirmPassword: String!) {
@@ -33,8 +34,11 @@ class ResetPassword extends Component {
                 variables={{
                     resetToken: this.props.resetToken,
                     password: this.state.password,
-                    confirmPassword: this.props.confirmPassword
-                }} 
+                    confirmPassword: this.state.confirmPassword
+                }}
+                refetchQueries={[
+                    {query: CURRENT_USER_QUERY}
+                ]}
             >
                 {(reset, {error, loading}) => {
                     return (
@@ -44,7 +48,7 @@ class ResetPassword extends Component {
                             onSubmit={async e => {
                                 e.preventDefault();
                                 const res = await reset();
-                                this.setState({email: ''});
+                                this.setState({email: '', confirmPassword: ''});
                             }}
                         >
                             <fieldset disabled={loading} aria-busy={loading}>
@@ -58,7 +62,7 @@ class ResetPassword extends Component {
 
                                 <label htmlFor='confirmPassword'>
                                     Confirm password
-                                    <input type='confirmPassword' name='confirmPassword' placeholder='confirmPassword' value={this.state.confirmPassword} onChange={this.saveToState} />
+                                    <input type='password' name='confirmPassword' placeholder='confirm password' value={this.state.confirmPassword} onChange={this.saveToState} />
                                     </label>
 
                                 <button type='submit'>Reset password</button>
