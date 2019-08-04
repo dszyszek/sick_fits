@@ -1,9 +1,8 @@
-
-import CreateItem from '../components/CreateItem';
+import ResetPassword from '../components/Reset';
 
 const Reset = props => (
     <div>
-        <p>Reset your password</p>
+        <ResetPassword resetToken={props.query.resetToken} />
     </div>
 );
 
