@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Query} from 'react-apollo';
 import gql from 'graphql-tag';
+import PropTypes from 'prop-types';
 
 import Table from './styles/Table';
 import SickButton from './styles/SickButton';
@@ -48,7 +49,7 @@ const Permissions = props => {
                                 </tr>
                             </thead>
                             <tbody>
-                               {data.users.map((user, i) => <User key={i} user={user} />)}
+                               {data.users.map((user, i) => <UserPermissions key={i} user={user} />)}
                             </tbody>
                         </Table>
                     </div>
@@ -59,7 +60,20 @@ const Permissions = props => {
 };
 
 
-class User extends Component {
+class UserPermissions extends Component {
+    static propTypes = {
+        user: PropTypes.shape({
+            name: PropTypes.string,
+            permissions: PropTypes.array,
+            email: PropTypes.string,
+            id: PropTypes.string
+        }).isRequired
+    };
+
+    state = {
+        permissions: this.props.user.permissions
+    };
+
     render() {
         const user = this.props.user;
         return (
