@@ -155,11 +155,11 @@ const mutations = {
     },
 
     async updatePermissions(parent, args, ctx, info) {
-        if (!ctx.db.userId) {
+        if (!ctx.request.userId) {
             throw new Error('You must be logged in!');
         }
 
-        const currentUser = await ctx.query.db.user({
+        const currentUser = await ctx.db.query.user({
             where: {
                 id: ctx.request.userId
             }
