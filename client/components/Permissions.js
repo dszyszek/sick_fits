@@ -18,7 +18,7 @@ const possiblePermissions = [
 ];
 
 const UPDATE_PERMISSIONS_MUTATION = gql`
-    mutation updatePermissions($permission: [Permission], $userId: ID!) {
+    mutation updatePermissions($permissions: [Permission], $userId: ID!) {
         updatePermissions(permissions: $permissions, userId: $userId) {
             id
             permissions
@@ -110,38 +110,40 @@ class UserPermissions extends Component {
                     userId: this.props.user.id
                 }} 
             >
-                {(updatePermissions, {loading, error}) => {
-                    {error && <Error error={error} />}
+                {(updatePermissions, {loading, error, called}) => {
                     
                     return (
-                        <tr>
-                        <td>{user.name}</td> 
-                        <td>{user.email}</td> 
-                        {possiblePermissions.map((permission, i) => (
-                            <td key={i}>
-                            <label htmlFor={`${user.id} - permission - ${permission}`}>
-                            <input 
-                            id={`${user.id} - permission - ${permission}`}
-                            type="checkbox" 
-                            checked={this.state.permissions.includes(permission)} 
-                            value={permission}
-                                        onChange={this.handlePermissionChange}
-                                        />
-                                        </label>
-                                        </td>
-                                        )
-                                        )}
-                                        <td>
-                                        <SickButton
-                                        type='button'
-                                        disabled={loading}
-                                        onClick={updatePermissions}
-                                        >
-                                        Update
-                                        </SickButton>
-                                        </td>
-                                        </tr>
-                                        
+                        <>
+                            {error && <tr><td colSpan='8'><Error error={error} /></td></tr>}
+                            {!error && !loading && called && <tr><td colSpan='8'><span style={{color: 'red'}}>Successfully updated!</span></td></tr>}
+                            <tr>
+                            <td>{user.name}</td> 
+                            <td>{user.email}</td> 
+                            {possiblePermissions.map((permission, i) => (
+                                <td key={i}>
+                                <label htmlFor={`${user.id} - permission - ${permission}`}>
+                                <input 
+                                id={`${user.id} - permission - ${permission}`}
+                                type="checkbox" 
+                                checked={this.state.permissions.includes(permission)} 
+                                value={permission}
+                                            onChange={this.handlePermissionChange}
+                                            />
+                                            </label>
+                                            </td>
+                                            )
+                                            )}
+                                            <td>
+                                            <SickButton
+                                            type='button'
+                                            disabled={loading}
+                                            onClick={updatePermissions}
+                                            >
+                                            Update
+                                            </SickButton>
+                                            </td>
+                                            </tr>
+                            </>
                             );
                         }
                 }
