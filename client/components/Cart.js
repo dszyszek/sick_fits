@@ -8,9 +8,19 @@ import SickButton from './styles/SickButton'
 class Cart extends Component {
     render() {
         return (
-            <div>
-                Cart
-            </div>
+            <CartStyles open={true}>
+                <header>
+                    <CloseButton title='close'>&times;</CloseButton>
+                    <Supreme>Your cart</Supreme>
+                    <p>You have __ items in your cart</p>
+                </header>
+
+                <footer>
+                    <p>$10.10</p>
+                    <SickButton>Checkout</SickButton>
+                </footer>
+
+            </CartStyles>
         );
     }
 }
