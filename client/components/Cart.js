@@ -14,29 +14,41 @@ const LOCAL_STATE_QUERY = gql`
     }
 `;
 
+const TOGGLE_CART_MUTATION = gql`
+    mutation {
+        toggleCart @client
+    }
+`;
+
 class Cart extends Component {
     render() {
         return (
-            <Query query={LOCAL_STATE_QUERY}>
-                {({data}) => (
-                    <CartStyles open={data.cartOpen}>
-                        {console.log(data)}
-                        <header>
-                            <CloseButton title='close'>&times;</CloseButton>
-                            <Supreme>Your cart</Supreme>
-                            <p>You have __ items in your cart</p>
-                        </header>
-        
-                        <footer>
-                            <p>$10.10</p>
-                            <SickButton>Checkout</SickButton>
-                        </footer>
-        
-                    </CartStyles>
-                )}
-            </Query>
+            <Mutation mutation={TOGGLE_CART_MUTATION}>
+                {(toggleCart) => (
+                    <Query query={LOCAL_STATE_QUERY}>
+                        {({data}) => (
+                            <CartStyles open={data.cartOpen}>
+                                <header>
+                                    <CloseButton onClick={toggleCart} title='close'>&times;</CloseButton>
+                                    <Supreme>Your cart</Supreme>
+                                    <p>You have __ items in your cart</p>
+                                </header>
+                
+                                <footer>
+                                    <p>$10.10</p>
+                                    <SickButton>Checkout</SickButton>
+                                </footer>
+                
+                            </CartStyles>
+                        )}
+                    </Query>
+                )} 
+
+            </Mutation>
+
         );
     }
 }
 
 export default Cart;
+export {LOCAL_STATE_QUERY, TOGGLE_CART_MUTATION};
