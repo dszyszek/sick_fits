@@ -7,6 +7,7 @@ import ItemStyles from './styles/ItemStyles';
 import PriceTag from './styles/PriceTag';
 import formatMoney from '../lib/formatMoney';
 import DeleteItem from './DeleteItem';
+import AddToCart from './AddToCart';
 
 class Item extends Component {
     render() {
@@ -37,7 +38,7 @@ class Item extends Component {
                     >
                         <a>Edit</a>
                     </Link>
-                    <button>Add to cart</button>
+                    <AddToCart id={item.id} >Add to cart</AddToCart>
                     <DeleteItem id={item.id} />
                 </div>
             </ItemStyles>
