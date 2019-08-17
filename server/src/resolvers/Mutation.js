@@ -186,6 +186,34 @@ const mutations = {
                 id: args.userId
             },
         }, info);
+    },
+
+    async addToCart(parent, args, ctx, info) {
+        const {userId} = ctx.request;
+
+        if (!userId) {
+            throw new Error('You must be logged in!');
+        }
+
+        const [existingCartItem] = ctx.db.query.cartItems({
+            user: {id: userId},
+            item: {id: args.id}
+        });
+        
+        if (existingCartItem) {
+            throw new Error('This item is already in the cart');
+        }
+
+        return ctx.db.mutation.createCartItem({
+            data: {
+                user: {
+                    connect: {id: userId}
+                },
+                item: {
+                    connect: {id: args.id}
+                }
+            }
+        });
     }
 
 };
