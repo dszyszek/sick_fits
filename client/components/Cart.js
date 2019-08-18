@@ -6,6 +6,8 @@ import CartStyles from './styles/CartStyles'
 import Supreme from './styles/Supreme'
 import CloseButton from './styles/CloseButton'
 import SickButton from './styles/SickButton'
+import User  from './User';
+import CartItem from './CartItem';
 
 
 const LOCAL_STATE_QUERY = gql`
@@ -23,28 +25,39 @@ const TOGGLE_CART_MUTATION = gql`
 class Cart extends Component {
     render() {
         return (
-            <Mutation mutation={TOGGLE_CART_MUTATION}>
-                {(toggleCart) => (
-                    <Query query={LOCAL_STATE_QUERY}>
-                        {({data}) => (
-                            <CartStyles open={data.cartOpen}>
-                                <header>
-                                    <CloseButton onClick={toggleCart} title='close'>&times;</CloseButton>
-                                    <Supreme>Your cart</Supreme>
-                                    <p>You have __ items in your cart</p>
-                                </header>
-                
-                                <footer>
-                                    <p>$10.10</p>
-                                    <SickButton>Checkout</SickButton>
-                                </footer>
-                
-                            </CartStyles>
-                        )}
-                    </Query>
-                )} 
+            <User>{({data: {me}}) => {
+                if (!me) return null;
+                return (
+                    <Mutation mutation={TOGGLE_CART_MUTATION}>
+                        {(toggleCart) => (
+                            <Query query={LOCAL_STATE_QUERY}>
+                                {({data}) => (
+                                    <CartStyles open={data.cartOpen}>
+                                        <header>
+                                            <CloseButton onClick={toggleCart} title='close'>&times;</CloseButton>
+                                            <Supreme>{me.name}'s cart</Supreme>
+                                            <p>You have {me.cart.length} item{me.cart.length ? '' : 's'} in your cart</p>
+                                        </header>
 
-            </Mutation>
+                                        <ul>
+                                            {me.cart.map(cartItem => (
+                                               <CartItem item={cartItem} />
+                                            ))}
+                                        </ul>
+
+                                        <footer>
+                                            <p>$10.10</p>
+                                            <SickButton>Checkout</SickButton>
+                                        </footer>
+                        
+                                    </CartStyles>
+                                )}
+                            </Query>
+                        )} 
+        
+                    </Mutation>
+                );
+            }}</User>
 
         );
     }
