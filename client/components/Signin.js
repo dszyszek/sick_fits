@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {Mutation} from 'react-apollo';
 import gql from 'graphql-tag';
+import Router from 'next/router';
+
 import Form from './styles/Form';
 import Error from './ErrorMessage';
 import {CURRENT_USER_QUERY} from './User';
@@ -46,6 +48,8 @@ class Signin extends Component {
                                 e.preventDefault();
                                 const res = await signup();
                                 this.setState({name: '', email: '', password: ''});
+                                Router.push({ pathname: '/' })
+
                             }}
                         >
                             <fieldset disabled={loading} aria-busy={loading}>
