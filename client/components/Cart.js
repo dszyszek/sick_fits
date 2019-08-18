@@ -41,7 +41,7 @@ class Cart extends Component {
 
                                         <ul>
                                             {me.cart.map(cartItem => (
-                                               <CartItem item={cartItem} />
+                                               <CartItem key={cartItem.id} cartItem={cartItem} />
                                             ))}
                                         </ul>
 
