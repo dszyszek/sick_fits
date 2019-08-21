@@ -22,6 +22,13 @@ const CartItemStyled = styled.li`
 `;
 
 const CartItem = ({cartItem}) => {
+    if (!cartItem.item) return (
+           <CartItemStyled>
+                <p>This item was reoved</p>
+                <RemoveFromCart id={cartItem.id} />
+           </CartItemStyled>
+    );
+
     return (
         <CartItemStyled>
             <img width='100' src={cartItem.item.image} alt={cartItem.item.title}/>
