@@ -23,14 +23,26 @@ const SEARCH_ITEMS_QUERY = gql`
 `;
 
 class AutoComplete extends React.Component {
-    onChange = async (e, client) => {
+    state = {
+        items: [],
+        loading: false
+    }
+
+    onChange = debounce(async (e, client) => {
+        this.setState({
+            loading: true
+        })
+
         const res = await client.query({
             query: SEARCH_ITEMS_QUERY,
             variables: {searchTerm: e.target.value}
         });
 
-        console.log(res);
-    }
+        this.setState({
+            items: res.data.items,
+            loading: false
+        })
+    }, 350);
 
     render() {
         return (
@@ -46,7 +58,16 @@ class AutoComplete extends React.Component {
                     </ApolloConsumer>
                     
                     <DropDown>
-                        <p>Items here</p>
+                        {this.state.items.map(item => (
+                            <DropDownItem>
+                                <img 
+                                    width='50' 
+                                    src={item.image} 
+                                    alt={item.title} 
+                                    key={item.id} 
+                                />
+                            </DropDownItem>
+                        ))}
                     </DropDown>
                 </div>
             </SearchStyles>
