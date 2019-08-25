@@ -4,7 +4,7 @@ import {Mutation} from 'react-apollo';
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
-import gql from 'gql-tag';
+import gql from 'graphql-tag';
 import calcTotalPrice from '../lib/calcTotalPrice';
 import Error from './ErrorMessage';
 import User, {CURRENT_USER_QUERY} from './User';
@@ -14,7 +14,9 @@ class GetMoney extends React.Component {
         return (
             <User>
                 {({data: {me}}) => (
-                    <p>Checkout</p>
+                    <StripeCheckout>
+                        {this.props.children}
+                    </StripeCheckout>
                 )}
             </User>
         );
