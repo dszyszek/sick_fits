@@ -4,6 +4,7 @@ const {randomBytes} = require('crypto');
 const {promisify} = require('util');
 const {transport, makeEmail} = require('../mail');
 const {hasPermission} = require('../utils');
+const stripe = require('../stripe');
 
 const mutations = {
 
@@ -241,6 +242,38 @@ const mutations = {
         return ctx.db.mutation.deleteCartItem({
             where: {id: args.id}
         }, info);
+    },
+
+    async createOrder(parent, args, ctx, info) {
+        const {userId} = ctx.request;
+        if (!userId) throw new Error('You must be signed in!');
+
+        const user = await ctx.db.query.user(
+            {where: {id: userId}}, 
+                `{
+                    id 
+                    name 
+                    email 
+                    cart {
+                        id 
+                        quantity 
+                        item {
+                            title 
+                            price 
+                            id 
+                            description 
+                            image
+                            }
+                        }
+                }`
+            );
+        const amount = user.cart.reduce((current, next) => current + next.item.price * next.quantity, 0);
+
+        const charge = await stripe.charges.create({
+            amount,
+            currency: 'USD',
+            source: args.token
+        });
     }
 
 };
