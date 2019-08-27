@@ -263,6 +263,7 @@ const mutations = {
                             id 
                             description 
                             image
+                            largeImage
                             }
                         }
                 }`
@@ -274,6 +275,32 @@ const mutations = {
             currency: 'USD',
             source: args.token
         });
+
+        const orderItems = user.cart.map(item => {
+            const orderItem = {
+                ...item.item,
+                quantity: item.quantity,
+                user: {connect: {id: userId}}
+            };
+
+            delete orderItem.id;
+            return orderItem;
+        });
+
+        const order = await ctx.db.mutation.createOrder({
+            data: {
+                total: charge.amount,
+                charge: charge.id,
+                items: {create: orderItems},
+                user: {connect: {id: userId}}
+            }
+        });
+
+        const cartItemIDs = user.cart.map(item => item.id);
+
+        await ctx.db.mutation.deleteManyCartItems({where: {id_in: cartItemIDs}});
+
+        return order;
     }
 
 };
