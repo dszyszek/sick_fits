@@ -29,14 +29,16 @@ class GetMoney extends React.Component {
         return cart.reduce((current, next) => current + next.quantity, 0);
     }
 
-    onToken = (res, createOrder) => {
-        createOrder({
+    onToken = async (res, createOrder) => {
+        const order = await createOrder({
             variables: {
                 token: res.id
             }
         }).catch(e => {
             alert(e.message);
         });
+
+        console.log(order);
     }
 
     render() {
@@ -52,7 +54,7 @@ class GetMoney extends React.Component {
                                 amount={calcTotalPrice(me.cart)}
                                 name='Sick fits'
                                 description={`Order of ${this.totalItems(me.cart)} items!`}
-                                image={me.cart[0].item && me.cart[0].item.image}
+                                image={me.cart.length && me.cart[0].item && me.cart[0].item.image}
                                 stripeKey='pk_test_zNX8GHalH77LM7hKwSZMGj1D00XSHZBPry'
                                 currency='USD'
                                 email={me.email}
