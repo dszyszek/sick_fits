@@ -56,10 +56,13 @@ class Cart extends Component {
 
                                 <footer>
                                     <p>{formatMoney(calcTotalPrice(me.cart))}</p>
-
-                                    <GetMoney>
-                                        <SickButton>Checkout</SickButton>
-                                    </GetMoney>
+                                    
+                                    {me.cart.length && (
+                                        <GetMoney>
+                                            <SickButton>Checkout</SickButton>
+                                        </GetMoney>
+                                    )}
+                                    
                                 </footer>
                 
                             </CartStyles>
