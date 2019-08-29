@@ -80,6 +80,13 @@ class Order extends Component {
                                     <div className='order-item' key={item.id}>
                                         {console.log(item.image)}
                                         <img src={item.image} alt={item.title} />
+                                        <div className='image-details'>
+                                            <h2>{item.title}</h2>
+                                            <p>Qty: {item.quantity}</p>
+                                            <p>Each: {formatMoney(item.price)}</p>
+                                            <p>SubTotal: {formatMoney(item.price * item.quantity)}</p>
+                                            <p>{item.description}</p>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

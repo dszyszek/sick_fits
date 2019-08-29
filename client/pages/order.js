@@ -1,12 +1,13 @@
 import RequireSignIn from '../components/RequireSignIn';
+import Order from '../components/Order';
 
 
-const Sell = props => (
+const OrderPage = props => (
     <div>
         <RequireSignIn>
-            <p>Single order page</p>
+            {<Order id={props.query.id} />}
         </RequireSignIn>
     </div>
 );
 
-export default Sell;
+export default OrderPage;

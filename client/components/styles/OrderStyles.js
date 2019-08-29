@@ -28,6 +28,7 @@ const OrderStyles = styled.div`
     grid-gap: 2rem;
     margin: 2rem 0;
     padding-bottom: 2rem;
+    width: 200px;
     img {
       width: 100%;
       height: 100%;
